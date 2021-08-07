@@ -2,22 +2,17 @@ import React,{useState,useEffect} from "react";
 import {NavLink} from "react-router-dom";
 // import update from 'immutability-helper';
 import {fieldCd, skinCodes}  from '../../constants/typeCodes';
-// import * as contactActions from '../../actions/contactActions';
+import * as contactActions from '../../store/actions/contactActions';
 // import { bindActionCreators } from 'redux';
-// import { withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import ResumePreview from './resumePreview'
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 
 function Contact(props) {
    let history = useHistory();
    const [contact,setContact]= useState(props.contactSection);
-//    useEffect(() => {
-//        if(!props.document || !props.document.id || !props.document.skinCd)
-//        {
-//            history.push('/getting-started')
-//        }
-//    }, [])
+
   const onchange=(event)=>{
         var key =event.target.name;
         var val =event.target.value;
@@ -25,12 +20,15 @@ function Contact(props) {
         setContact({...contact,[key]:val})
     }
     const onSubmit= async()=>{
-        // if(props.contactSection!=null){
-        //     props.updateContact(props.document.id,contact);
-        // }
-        // else{
-        //     props.addContact(props.document.id,contact);
-        // }
+
+        if(Object.keys(contact).length !== 0){
+            props.updateContact(contact);
+            console.log("update");
+        }
+        else{
+            props.addContact(contact);
+            console.log("set");
+        }
 
         history.push('/education');
     }
@@ -131,5 +129,21 @@ function Contact(props) {
 }
 
 
-export default Contact
+const mapStateToProps=(state)=>{
+    console.log(state.contactSection);
+    return {
+        contactSection:state.contactSection,
+        document:state.document
+    }
+  }
+  const mapDispatchToProps=(dispatch)=>{
+      return{
+         addContact:(contact)=>dispatch(contactActions.add(contact)),
+         updateContact:(contact)=>dispatch(contactActions.update(contact))
+      }
+  }
+  export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Contact))
+  
+
+
 

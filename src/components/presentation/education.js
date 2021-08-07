@@ -2,14 +2,15 @@ import React,{useState} from "react";
 import { NavLink } from 'react-router-dom';
 import { withRouter } from "react-router-dom";
 import ResumePreview from './resumePreview'
+import * as educationActions from '../../store/actions/educationActions';
 import {skinCodes, fieldCd} from './../../constants/typeCodes';
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 // import * as educationActions from '../../actions/educationActions';
 // import {bindActionCreators} from 'redux';
 import { useHistory } from "react-router-dom";
 
 function Education(props) {
-  console.log('Education');
+ 
   let history = useHistory();
   const [education,setEducation]= useState(props.educationSection);
 
@@ -25,12 +26,14 @@ function Education(props) {
     return "";
 }
   const onSubmit = async(e) => {
-    //console.log(this.state.educationSection);
-    // if(props.educationSection!=null){
-    //     props.updateEducation(props.document.id,education);
-    // }else{
-    //     props.addEducation(props.document.id,education);
-    // }
+    //console.log(educationSection);
+    if(Object.keys(education).length !== 0){
+        props.updateEducation(education);
+        console.log("update");
+    }else{
+        props.addEducation(education);
+        console.log("set");
+    }
      history.push('/finalize')
   }
 
@@ -41,42 +44,48 @@ function Education(props) {
           <div className="form-card">
             <h2 className="form-heading center">Educational Section</h2>
             <div className="form-section">
-              <div className="input-group"><label>College Name</label>
+              <div className="input-group">
+                <label>College Name</label>
                 <div className="effect"><input type="text" name={fieldCd.SchoolName}
                   onChange={onchange} value={getFieldData(fieldCd.SchoolName)} /><span></span>
                 </div>
                 <div className="error"></div>
               </div>
 
-              <div className="input-group"><label>Degree</label>
+              <div className="input-group">
+                <label>Degree</label>
                 <div className="effect"><input type="text" name={fieldCd.Degree}
                   onChange={onchange} value={getFieldData(fieldCd.Degree)} /><span></span>
                 </div>
                 <div className="error"></div>
               </div>
 
-              <div className="input-group"><label>CGPA</label>
+              <div className="input-group">
+                <label>CGPA</label>
                 <div className="effect"><input type="text" name={fieldCd.GraduationCGPA}
                   onChange={onchange} value={getFieldData(fieldCd.GraduationCGPA)} /><span></span>
                 </div>
                 <div className="error"></div>
               </div>
 
-              <div className="input-group"><label>City/State</label>
+              <div className="input-group">
+                <label>City/State</label>
                 <div className="effect"><input type="text"  name={fieldCd.City}
                   onChange={onchange} value={getFieldData(fieldCd.City)} /><span></span>
                 </div>
                 <div className="error"></div>
               </div>
 
-              <div className="input-group"><label>Graduation Month</label>
+              <div className="input-group">
+                <label>Graduation Month</label>
                 <div className="effect"><input type="text" name={fieldCd.GraduationDate}
                   onChange={onchange} value={getFieldData(fieldCd.GraduationDate)} /><span></span>
                 </div>
                 <div className="error"></div>
               </div>
 
-              <div className="input-group"><label>Graduation Year</label>
+              <div className="input-group">
+                <label>Graduation Year</label>
                 <div className="effect"><input type="text"  name={fieldCd.GraduationYear}
                   onChange={onchange} value={getFieldData(fieldCd.GraduationYear)} /><span></span>
                 </div>
@@ -97,10 +106,24 @@ function Education(props) {
     );
   }
 
+const mapStateToProps = (state)=>{
+  console.log(state.educationSection);
+  return {
+    educationSection:state.educationSection,
+    contactSection:state.contactSection,
+    document:state.document
 
+  }
+}
 
+const mapDispatchtoProps  = (dispatch)=>{
+  return{
+    addEducation:(educationSection)=>dispatch(educationActions.add(educationSection)),
+    updateEducation:(educationSection)=>dispatch(educationActions.update(educationSection))
+  }
+}
   
 
 
-export default Education
+export default withRouter(connect(mapStateToProps,mapDispatchtoProps)(Education));
 

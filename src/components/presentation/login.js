@@ -11,7 +11,7 @@ import { useHistory } from "react-router";
     let history = useHistory();
     const [email,setEmail] = useState('');
     const [password,setPassword]= useState('');
-    // useEffect(() => {
+    // useEffect(() => { 
     //   if(props.auth?.uid){
     //     history.push('/')
     //   }
