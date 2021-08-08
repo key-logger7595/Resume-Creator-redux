@@ -10,26 +10,17 @@ import thunk from 'redux-thunk';
 
 import { reduxFirestore, getFirestore } from 'redux-firestore';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
-import { create } from 'istanbul-reports';
 
 const store = createStore(rootReducer,
   compose(
-    applyMiddleware(thunk.withExtraArgument(getFirebase,getFirestore)),
-    reactReduxFirebase(fbConfig),
-    reduxFirestore(fbConfig)
-   
- )
+    applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
+    reactReduxFirebase(fbConfig,{useFirestoreForProfile:true,userProfile:'users',attachAuthIsReady:true}), // redux binding for firebase
+    reduxFirestore(fbConfig) // redux bindings for firestore
+  )
 );
 
+console.log(getFirestore,getFirebase);
 
-ReactDOM.render(
-       
-    <Provider store={store}>
-      <App />
-
-    </Provider>
-  
-   
-,
-  document.getElementById('root')
-);
+store.firebaseAuthIsReady.then(()=>{
+  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+})

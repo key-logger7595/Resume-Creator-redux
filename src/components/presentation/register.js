@@ -1,32 +1,41 @@
 import React,{useState,useEffect} from "react";
 // import { isLoaded } from 'react-redux-firebase'
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 // import * as authActions from '../../actions/authActions';
+import * as authActions from '../../store/actions/authActions';
 import { useHistory } from "react-router";
   function Register(props) {
  
     let history = useHistory();
     const [email,setEmail] = useState('');
     const [password,setPassword]= useState('');
+    const[loading,setLoading] = useState(false);
     const handleEmail= (e)=>{
       setEmail(e.target.value);
       }
       const handlePassword=(e)=>{
         setPassword(e.target.value);
       }
-   
+      useEffect(() => {
+        console.log(props.auth);
+        if(props.auth?.uid){
+          history.push('/')
+        }
+      }, [props])
   const onSubmit=()=>{
-    
-    //  props.register({email:email, password:password})
-    
-  }
 
- 
+     setLoading(true);
+
+     props.register({email:email, password:password});
+
+     setLoading(false);
+    
+   
+  }
     return (
-      <>
-    {/* To save from multiple request */}
-      {/* {!isLoaded(props.auth)?<></>:<>
-        {props.authMine.loading?<h4 style={{marginTop:'10%',height:'52vh'}}>Patiently Wait...we are resgistering you in</h4>: */}
+      
+       <>
+           {loading?<h4 style={{marginTop:'10%',height:'52vh'}}>Patiently Wait...we are resgistering you in</h4>:
           <div className="container med contact">
             <div className="section funnel-section">
                 <div className="form-card">
@@ -54,12 +63,26 @@ import { useHistory } from "react-router";
 
             </div>
         </div>
-
-        </>
-    );
+  }
+       </>
+        
+        
+      
+    )
   }
 
+  const mapStateToProps=(state)=>{
+    return {
+        auth:state.firebase.auth,
+        authMine:state.auth
+    }
+  }
+  const mapDispatchToProps=(dispatch)=>{
+    return{
+       register:(object)=>{dispatch(authActions.signUp(object))}
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(Register)
 
 
-
-  export default Register
+  

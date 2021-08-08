@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 // import * as educationActions from '../../actions/educationActions';
 // import {bindActionCreators} from 'redux';
 import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router";
 
 function Education(props) {
  
@@ -37,7 +38,7 @@ function Education(props) {
      history.push('/finalize')
   }
 
-    
+    if(!props.auth.uid) return <Redirect to="/login"/> 
     return (
       <div className="container med education" >
         <div className="section funnel-section">
@@ -107,11 +108,13 @@ function Education(props) {
   }
 
 const mapStateToProps = (state)=>{
-  console.log(state.educationSection);
+  console.log(state);
   return {
     educationSection:state.educationSection,
     contactSection:state.contactSection,
-    document:state.document
+    document:state.document,
+    auth:state.firebase.auth,
+    
 
   }
 }

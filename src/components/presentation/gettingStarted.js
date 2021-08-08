@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import * as documentActions from '../../store/actions/documentActions';
 import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { Redirect } from 'react-router';
+
 function GettingStarted(props) {
     let history = useHistory();
     const onChange = async (skinCd) => {
@@ -22,7 +24,7 @@ function GettingStarted(props) {
         history.push('/contact');
     }
 
-
+    if(!props.auth.uid) return <Redirect to="/login"/> 
     return (
         <div className="container med gettingStarted">
             <div className="section">
@@ -53,7 +55,8 @@ function GettingStarted(props) {
 const mapStateToProps = (state) =>{
     console.log(state.document);
     return {
-       document:state.document
+       document:state.document,
+       auth:state.firebase.auth
     }
 }
 const mapDispatchToProps = (dispatch) =>{

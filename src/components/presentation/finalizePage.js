@@ -4,6 +4,7 @@ import  jsPDF  from "jspdf";
 import html2canvas from 'html2canvas';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import { Redirect } from "react-router";
 
    function Finalize(props) {
     let educationSection= props.educationSection
@@ -30,6 +31,7 @@ import {withRouter} from 'react-router-dom';
            console.log(error)
          })
      }
+     if(!props.auth.uid) return <Redirect to="/login"/> 
     return (
       <div className="container full finalize-page" >
       <div className="funnel-section ">
@@ -63,6 +65,7 @@ const mapStateToProps=(state)=>{
       contactSection:state.contactSection,
       educationSection:state.educationSection,
       document:state.document,
+      auth:state.firebase.auth
   }
 }
 

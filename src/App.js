@@ -18,7 +18,7 @@ function App() {
 
     <Router>
 
-      <div>
+      
         <Header></Header>
 
         <Switch>
@@ -33,7 +33,7 @@ function App() {
           <Route path="/" component={LandingPage}></Route>
         </Switch>
         <Footer></Footer>
-      </div>
+      
     </Router>
 
   );

@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import ResumePreview from './resumePreview'
 import { connect } from "react-redux";
+import { Redirect } from "react-router";
 
 function Contact(props) {
    let history = useHistory();
@@ -40,7 +41,7 @@ function Contact(props) {
         }
         return "";
     }
-    
+    if(!props.auth.uid) return <Redirect to="/login"/> 
     return (
           <div className="container med contact">
             <div className="section funnel-section">
@@ -133,7 +134,8 @@ const mapStateToProps=(state)=>{
     console.log(state.contactSection);
     return {
         contactSection:state.contactSection,
-        document:state.document
+        document:state.document,
+        auth:state.firebase.auth
     }
   }
   const mapDispatchToProps=(dispatch)=>{
